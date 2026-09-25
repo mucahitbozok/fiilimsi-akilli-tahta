@@ -109,15 +109,7 @@ function toggleCheatSheet() {
   panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
 }
 
-// --- 2. TAKIM SKOR TABLOSU ---
-let scores = { A: 0, B: 0 };
-function changeScore(team, delta) {
-  playSound(delta > 0 ? 'correct' : 'click');
-  scores[team] = Math.max(0, scores[team] + delta);
-  document.getElementById('score-' + team.toLowerCase()).textContent = scores[team];
-}
-
-// --- 3. AKILLI TAHTA KALEM / ÇİZİM ARACI ---
+// --- 2. AKILLI TAHTA KALEM / ÇİZİM ARACI ---
 const canvas = document.getElementById('drawing-canvas');
 const ctx = canvas.getContext('2d');
 let drawingMode = false;
