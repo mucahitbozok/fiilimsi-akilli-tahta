@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🕵️ Fiilimsi Dedektifleri | 8. Sınıf Türkçe Akıllı Tahta Uygulaması</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- AKILLI TAHTA KALEM / ÇİZİM KATMANI -->
+  <canvas id="drawing-canvas"></canvas>
+
+  <!-- ÜST AKILLI TAHTA KONTROL PANELİ -->
+  <header class="top-bar">
+    <div class="brand" onclick="switchModule('menu')">
+      <div class="brand-icon">🕵️</div>
+      <div class="brand-text">
+        <h1>FİİLİMSİ DEDEKTİFLERİ</h1>
+        <span>8. Sınıf Türkçe • Etkileşimli Akıllı Tahta Platformu</span>
+      </div>
+    </div>
+
+    <!-- SINIF / GRUP SKOR TABLOSU -->
+    <div class="scoreboard">
+      <div class="team-score team-a">
+        <span class="team-badge">A Grubu</span>
+        <button class="score-btn" onclick="changeScore('A', -10)">-</button>
+        <span class="score-val" id="score-a">0</span>
+        <button class="score-btn" onclick="changeScore('A', 10)">+</button>
+      </div>
+      <div style="width: 2px; height: 26px; background: rgba(255,255,255,0.15);"></div>
+      <div class="team-score team-b">
+        <span class="team-badge">B Grubu</span>
+        <button class="score-btn" onclick="changeScore('B', -10)">-</button>
+        <span class="score-val" id="score-b">0</span>
+        <button class="score-btn" onclick="changeScore('B', 10)">+</button>
+      </div>
+    </div>
+
+    <!-- AKILLI TAHTA ARAÇLARI (KALEM, İPUCU, SES, TAM EKRAN) -->
+    <div class="toolbar-actions">
+      <button class="tool-btn" id="btn-draw-toggle" onclick="toggleDrawingMode()">
+        ✏️ Tahta Kalemi
+      </button>
+      <div class="draw-tools-popup" id="draw-tools-popup">
+        <div class="color-dot active" style="background:#fde047;" onclick="setPenColor('#fde047', this)" title="Sarı Fosforlu"></div>
+        <div class="color-dot" style="background:#ef4444;" onclick="setPenColor('#ef4444', this)" title="Kırmızı Kalem"></div>
+        <div class="color-dot" style="background:#38bdf8;" onclick="setPenColor('#38bdf8', this)" title="Mavi Kalem"></div>
+        <div class="color-dot" style="background:#4ade80;" onclick="setPenColor('#4ade80', this)" title="Yeşil Kalem"></div>
+        <button class="score-btn" style="width:auto; padding:0 8px; font-size:0.85rem;" onclick="clearCanvas()">🧹 Sil</button>
+      </div>
+
+      <button class="tool-btn" onclick="toggleCheatSheet()">
+        📌 Ek Kodlamaları
+      </button>
+
+      <button class="tool-btn active" id="btn-sound" onclick="toggleSound()">
+        🔊 Ses: Açık
+      </button>
+
+      <button class="tool-btn" onclick="toggleFullScreen()">
+        ⛶ Tam Ekran
+      </button>
+    </div>
+  </header>
+
+  <!-- HIZLI MODÜL GEÇİŞ ŞERİDİ -->
+  <nav class="module-strip" id="module-strip">
+    <button class="nav-pill active" data-target="menu" onclick="switchModule('menu')">🏠 Ana Menü</button>
+    <button class="nav-pill" data-target="mod1" onclick="switchModule('mod1')">1️⃣ Hangisi Farklı? (5 dk)</button>
+    <button class="nav-pill" data-target="mod2" onclick="switchModule('mod2')">2️⃣ Fiilimsi Dedektifi (8 dk)</button>
+    <button class="nav-pill" data-target="mod3" onclick="switchModule('mod3')">3️⃣ Fiilimsi Makinesi (10 dk)</button>
+    <button class="nav-pill" data-target="mod4" onclick="switchModule('mod4')">4️⃣ Doğru Kutuyu Bul (7 dk)</button>
+    <button class="nav-pill" data-target="mod5" onclick="switchModule('mod5')">5️⃣ 5 Saniyede Bul! (5 dk)</button>
+    <button class="nav-pill" data-target="mod6" onclick="switchModule('mod6')">6️⃣ Fiil mi Fiilimsi mi? (5 dk)</button>
+    <button class="nav-pill" data-target="mod7" onclick="switchModule('mod7')">7️⃣ Fiilimsi Milyoneri (5 dk)</button>
+    <button class="nav-pill" data-target="mod8" onclick="switchModule('mod8')">🧠 Fiilimsi 5 & Kartlar</button>
+  </nav>
+
+  <!-- EKLER VE KODLAMALAR MODAL / ÇEKMECESİ -->
+  <div id="cheatsheet-panel" style="display:none; background: #1e1b4b; border-bottom: 3px solid #6366f1; padding: 18px 32px; z-index: 940;">
+    <div style="max-width: 1440px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;">
+      <div style="background: var(--isim-bg); border: 2px solid var(--isim-border); padding: 14px 18px; border-radius: 14px;">
+        <h4 style="color:#93c5fd; font-size:1.15rem; margin-bottom:6px;">🟦 İSİM-FİİL (AD-EYLEM) EKLERİ</h4>
+        <div style="font-size:1.4rem; font-weight:900; color:#fff; letter-spacing:1px;">MA - Y - IŞ - MAK</div>
+        <p style="font-size:0.92rem; color:#cbd5e1; margin-top:6px;">Örnek: oku<strong>mak</strong>, oku<strong>ma</strong>yı, gül<strong>üş</strong>ü. <em>(Kalıcı isimlere dikkat: çakmak, dondurma, dolma!)</em></p>
+      </div>
+      <div style="background: var(--sifat-bg); border: 2px solid var(--sifat-border); padding: 14px 18px; border-radius: 14px;">
+        <h4 style="color:#6ee7b7; font-size:1.15rem; margin-bottom:6px;">🟩 SIFAT-FİİL (ORTAÇ) EKLERİ</h4>
+        <div style="font-size:1.35rem; font-weight:900; color:#fff; letter-spacing:0.5px;">AN - ASI - MEZ - AR - DİK - ECEK - MİŞ</div>
+        <p style="font-size:0.92rem; color:#cbd5e1; margin-top:6px;">Örnek: koş<strong>an</strong> çocuk, tanı<strong>dık</strong> yüz, görül<strong>mez</strong> kaza. <em>(Çekimli fiille karıştırma!)</em></p>
+      </div>
+      <div style="background: var(--zarf-bg); border: 2px solid var(--zarf-border); padding: 14px 18px; border-radius: 14px;">
+        <h4 style="color:#fcd34d; font-size:1.15rem; margin-bottom:6px;">🟨 ZARF-FİİL (BAĞ-FİİL / ULAÇ) EKLERİ</h4>
+        <div style="font-size:1.2rem; font-weight:900; color:#fff;">-ken, -alı, -madan, -ince, -ip, -arak, -dıkça, -e...-e, -r...-maz, -casına, -meksizin, -dığında</div>
+        <p style="font-size:0.92rem; color:#cbd5e1; margin-top:6px;">Örnek: koş<strong>arak</strong> geldi, çalış<strong>ırken</strong> dinledi, bak<strong>ınca</strong> anladı. <em>(Nasıl? Ne zaman?)</em></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANA SAHNE -->
+  <main class="main-stage">
+
+    <!-- ==========================================
+         ANA MENÜ (BÖLÜM 10 & 11)
+         ========================================== -->
+    <section id="sec-menu" class="module-section active">
+      <div class="menu-hero">
+        <h2>🕵️ FİİLİMSİ DEDEKTİFLERİ: 45 DAKİKALIK DERS AKIŞI</h2>
+        <p>Öğretmen anlatır, öğrenci dinler yerine: <strong>Öğrenci görür → tahmin eder → tahtaya dokunur → keşfeder!</strong></p>
+        <div class="flow-steps">
+          <span class="flow-chip">1. Keşfet</span>
+          <span class="flow-chip">2. Sınıflandır</span>
+          <span class="flow-chip">3. Oyunlaştır</span>
+          <span class="flow-chip">4. Tekrar Et</span>
+          <span class="flow-chip">5. Ölç</span>
+        </div>
+      </div>
+
+      <div class="menu-grid">
+        <div class="menu-card" onclick="switchModule('mod1')">
+          <div class="menu-card-top">
+            <div>
+              <h3>1. Hangisi Farklı?</h3>
+              <p>“Kitap okuyorum / okumayı / okumak” cümlelerinde kelimelerin görev farkını tahtada dokunarak keşfet!</p>
+            </div>
+            <div class="menu-icon">💡</div>
+          </div>
+          <div class="menu-card-footer">
+            <span>⏱️ Süre: 5 Dakika</span>
+            <span>Derse Giriş & Merak →</span>
+          </div>
+        </div>
+
+        <div class="menu-card" onclick="switchModule('mod2')">
+          <div class="menu-card-top">
+            <div>
+              <h3>2. Fiilimsi Dedektifi</h3>
+              <p>Tahtaya gel, cümledeki fiilimsiyi büyüteçle yakala ve İSİM / SIFAT / ZARF-FİİL türünü tahmin et!</p>
+            </div>
+            <div class="menu-icon">🔎</div>
+          </div>
+          <div class="menu-card-footer">
+            <span>⏱️ Süre: 8 Dakika</span>
+            <span>Kelime Seçme & Tür Bulma →</span>
+          </div>
+        </div>
+
+        <div class="menu-card" onclick="switchModule('mod3')">
+          <div class="menu-card-top">
+            <div>
+              <h3>3. Fiilimsi Makinesi</h3>
+              <p>Ortadaki fiil kökünü (gül-, koş-, çalış-...) üç farklı çarktan geçirerek İsim, Sıfat ve Zarf-Fiile dönüştür!</p>
+            </div>
+            <div class="menu-icon">⚙️</div>
+          </div>
+          <div class="menu-card-footer">
+            <span>⏱️ Süre: 10 Dakika</span>
+            <span>Kökten Türetme Atölyesi →</span>
+          </div>
+        </div>
+
+        <div class="menu-card" onclick="switchModule('mod4')">
+          <div class="menu-card-top">
+            <div>
+              <h3>4. Doğru Kutuyu Bul</h3>
+              <p>Ortadaki kelimeleri 🟦 İsim-Fiil, 🟩 Sıfat-Fiil ve 🟨 Zarf-Fiil kutularına sürükle veya dokunarak gönder!</p>
+            </div>
+            <div class="menu-icon">📦</div>
+          </div>
+          <div class="menu-card-footer">
+            <span>⏱️ Süre: 7 Dakika</span>
+            <span>Sürükle-Bırak Sınıflandırma →</span>
+          </div>
+        </div>
+
+        <div class="menu-card" onclick="switchModule('mod5')">
+          <div class="menu-card-top">
+            <div>
+              <h3>5. “5 Saniyede Bul!”</h3>
+              <p>Süre işliyor! Tahtaya gelen cümlede kaç tane fiilimsi olduğunu 5 saniye içinde yakalayabilir misin?</p>
+            </div>
+            <div class="menu-icon">⏱️</div>
+          </div>
+          <div class="menu-card-footer">
+            <span>⏱️ Süre: 5 Dakika</span>
+            <span>Hızlı Radar & Dikkat →</span>
+          </div>
+        </div>
+
+        <div class="menu-card" onclick="switchModule('mod6')">
+          <div class="menu-card-top">
+            <div>
+              <h3>6. Fiil mi, Fiilimsi mi?</h3>
+              <p>Çekimli fiil ile fiilimsiyi ve LGS'nin en sevdiği “Kalıcı İsim (dondurma, çakmak)” tuzaklarını ayırt et!</p>
+            </div>
+            <div class="menu-icon">⚔️</div>
+          </div>
+          <div class="menu-card-footer">
+            <span>⏱️ Süre: 5 Dakika</span>
+            <span>Karşılaştırma Düellosu →</span>
+          </div>
+        </div>
+
+        <div class="menu-card" onclick="switchModule('mod7')">
+          <div class="menu-card-top">
+            <div>
+              <h3>7. Fiilimsi Milyoneri</h3>
+              <p>100 puandan 1000 puana uzanan Büyük Final! Sınıfa Sor, 50:50 ve Dedektif İpucu jokerlerini kullan!</p>
+            </div>
+            <div class="menu-icon">🏆</div>
+          </div>
+          <div class="menu-card-footer">
+            <span>⏱️ Süre: 5 Dakika</span>
+            <span>Final Quiz Yarışması →</span>
+          </div>
+        </div>
+
+        <div class="menu-card" onclick="switchModule('mod8')">
+          <div class="menu-card-top">
+            <div>
+              <h3>8. “Fiilimsi 5” & Dijital Kartlar</h3>
+              <p>Her Türkçe dersinin ilk 5 dakikası için “Fiilimsi 5” görev panosu ve 3B dönen tekrar kartları!</p>
+            </div>
+            <div class="menu-icon">🧠</div>
+          </div>
+          <div class="menu-card-footer">
+            <span>🔄 Sürekli Tekrar Sistemi</span>
+            <span>Flashcard & Günlük Rutin →</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         BÖLÜM 1: HANGİSİ FARKLI? (5 DK)
+         ========================================== -->
+    <section id="sec-mod1" class="module-section">
+      <div class="section-header">
+        <div class="section-title-group">
+          <h2>💡 1. Bölüm: Derse Giriş – “Hangisi Farklı?”</h2>
+          <p>Bu üç cümlede de aynı kökten gelen bir kelime var. <strong>Sarı renkli kelimelere dokunarak</strong> cümledeki görevlerinin neden farklı olduğunu keşfedelim!</p>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <span class="badge-time">⏱️ 5 Dakika</span>
+          <button class="btn-secondary" onclick="nextDiscoverySet()">🔄 Başka Örnek Seti (<span id="disc-set-index">1/3</span>)</button>
+        </div>
+      </div>
+
+      <div class="board-card">
+        <div style="background: rgba(99, 102, 241, 0.15); border: 2px solid #6366f1; padding: 16px 22px; border-radius: 14px; text-align:center; font-size: 1.3rem; font-weight:700;">
+          ❓ <strong>Sınıf Sorusu:</strong> <span id="disc-question-prompt">“Bu üç cümlede de okumakla ilgili bir kelime var. Peki neden görevleri aynı değil?”</span>
+        </div>
+
+        <div class="discovery-sentences" id="discovery-cards-container">
+          <!-- JS ile doldurulur -->
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; margin-top:16px;">
+          <button class="btn-secondary" onclick="revealAllDiscovery()">👁️ Tüm Görevleri Aç / Karşılaştır</button>
+          <div id="disc-summary-note" style="display:none; background:rgba(34,197,94,0.18); border:2px solid #22c55e; padding:14px 22px; border-radius:14px; font-weight:700; font-size:1.15rem; color:#bbf7d0;">
+            🎯 <strong>Keşif Sonucu:</strong> Fiil kökünden türeyip kip/şahıs eki almadan cümlede <strong>İsim, Sıfat veya Zarf</strong> görevinde kullanılan bu özel kelimelere <strong>FİİLİMSİ (EYLEMSİ)</strong> diyoruz!
+          </div>
+          <button class="btn-primary" onclick="switchModule('mod2')">2. Bölüme Geç: Fiilimsi Dedektifi →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         BÖLÜM 2: FİİLİMSİ DEDEKTİFİ (8 DK)
+         ========================================== -->
+    <section id="sec-mod2" class="module-section">
+      <div class="section-header">
+        <div class="section-title-group">
+          <h2>🔎 2. Bölüm: “Fiilimsi Dedektifi”</h2>
+          <p><strong>1. Adım:</strong> Tahtaya gelip cümledeki fiilimsi olan kelimeye dokun. &nbsp;|&nbsp; <strong>2. Adım:</strong> Türünü (İsim / Sıfat / Zarf) seç!</p>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <span class="badge-time" id="det-progress-badge">Soru 1 / 8</span>
+          <button class="btn-secondary" onclick="prevDetective()">◀ Önceki</button>
+          <button class="btn-primary" onclick="nextDetective()">Sonraki Cümle ▶</button>
+        </div>
+      </div>
+
+      <div class="board-card">
+        <div style="text-align:center; font-size:1.2rem; color:#94a3b8; font-weight:700;" id="det-step-instruction">
+          👇 1. ADIM: Cümledeki FİİLİMSİ olan kelimenin üzerine dokun!
+        </div>
+
+        <div class="sentence-stage">
+          <div class="word-tokens" id="det-word-tokens">
+            <!-- Kelime butonları JS ile oluşturulur -->
+          </div>
+        </div>
+
+        <!-- 2. Adım: Tür Seçimi (Kelime doğru seçilince aktifleşir) -->
+        <div id="det-type-section" style="display:none;">
+          <h3 style="text-align:center; font-size:1.45rem; color:#fde047; margin-bottom:10px;">
+            🎯 Harika! <span id="det-found-word-label">KOŞARAK</span> kelimesini buldun. Şimdi türünü seç:
+          </h3>
+          <div class="type-selector">
+            <button class="type-btn isim" onclick="checkDetectiveType('isim')">
+              🟦 İSİM-FİİL
+              <span class="sub">(-ma, -ış, -mak)</span>
+            </button>
+            <button class="type-btn sifat" onclick="checkDetectiveType('sifat')">
+              🟩 SIFAT-FİİL
+              <span class="sub">(-an, -ası, -mez, -ar, -dik, -ecek, -miş)</span>
+            </button>
+            <button class="type-btn zarf" onclick="checkDetectiveType('zarf')">
+              🟨 ZARF-FİİL
+              <span class="sub">(-ken, -alı, -madan, -ince, -ip, -arak...)</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="feedback-banner" id="det-feedback" style="margin-top:20px;"></div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         BÖLÜM 3: FİİLİMSİ MAKİNESİ (10 DK)
+         ========================================== -->
+    <section id="sec-mod3" class="module-section">
+      <div class="section-header">
+        <div class="section-title-group">
+          <h2>⚙️ 3. Bölüm: “Fiilimsi Makinesi”</h2>
+          <p>Aynı fiil kökünün aldığı eklere göre nasıl <strong>İsim-Fiil, Sıfat-Fiil ve Zarf-Fiil</strong> olarak üç farklı yola ayrıldığını gör ve eşleştir!</p>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <button class="btn-secondary" id="btn-machine-mode" onclick="toggleMachineQuizMode()">🎮 Eşleştirme Oyun Modunu Aç</button>
+          <span class="badge-time">⏱️ 10 Dakika</span>
+        </div>
+      </div>
+
+      <div class="board-card">
+        <div style="text-align:center; font-weight:700; color:#cbd5e1; margin-bottom:10px;">
+          👇 Makineye göndermek istediğin <strong>FİİL KÖKÜNE</strong> dokun:
+        </div>
+        <div class="root-selector-bar" id="machine-root-bar">
+          <!-- Fiil kökleri JS ile oluşturulur -->
+        </div>
+
+        <div class="machine-container">
+          <div class="machine-core">
+            <span class="root-label">FİİL KÖKÜ</span>
+            <span class="root-val" id="machine-current-root">gül-</span>
+          </div>
+
+          <!-- KEŞİF VE DÖNÜŞTÜRME GÖRÜNÜMÜ -->
+          <div class="machine-outputs" id="machine-explore-view">
+            <!-- 3 Bölme JS ile oluşturulur -->
+          </div>
+
+          <!-- EŞLEŞTİRME OYUNU GÖRÜNÜMÜ -->
+          <div id="machine-quiz-view" style="display:none; flex-direction:column; gap:20px;">
+            <div style="text-align:center; font-size:1.3rem; font-weight:800; color:#fde047;">
+              🧩 Önce aşağıdaki türetilmiş kelimelerden birine dokun, sonra ait olduğu makine koluna yerleştir!
+            </div>
+            <div class="word-pool" id="machine-quiz-pool"></div>
+            <div class="machine-outputs" id="machine-quiz-targets"></div>
+          </div>
+        </div>
+
+        <div class="feedback-banner" id="machine-feedback" style="margin-top:18px;"></div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         BÖLÜM 4: TAHTAYA DOKUN – DOĞRU KUTUYU BUL (7 DK)
+         ========================================== -->
+    <section id="sec-mod4" class="module-section">
+      <div class="section-header">
+        <div class="section-title-group">
+          <h2>📦 4. Bölüm: “Tahtaya Dokun – Doğru Kutuyu Bul”</h2>
+          <p>Ortadaki kelimeleri doğru kutuya <strong>sürükleyip bırakın</strong> (veya önce kelimeye, sonra kutuya dokunun!).</p>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <button class="btn-secondary" onclick="loadBoxLevel(0)">Set 1 (Temel)</button>
+          <button class="btn-secondary" onclick="loadBoxLevel(1)">Set 2 (Orta)</button>
+          <button class="btn-secondary" onclick="loadBoxLevel(2)">Set 3 (LGS Seviyesi)</button>
+          <button class="btn-primary" onclick="resetCurrentBoxLevel()">🔄 Sıfırla</button>
+        </div>
+      </div>
+
+      <div class="board-card">
+        <div class="feedback-banner" id="box-feedback" style="margin-bottom:16px;"></div>
+
+        <div style="text-align:center; margin-bottom:8px; font-weight:700; color:#94a3b8;">
+          👇 Kelimeye dokunup seçebilir veya doğrudan kutuya sürükleyebilirsin (<span id="box-remaining-count">6</span> kelime kaldı)
+        </div>
+        <div class="word-pool" id="box-word-pool">
+          <!-- Sürüklenebilir kelimeler -->
+        </div>
+
+        <div class="boxes-grid">
+          <div class="drop-box isim" data-boxtype="isim" ondragover="allowDrop(event)" ondragleave="leaveDrop(event)" ondrop="handleDrop(event, 'isim')" onclick="handleBoxTap('isim')">
+            <div class="drop-box-header">🟦 İSİM-FİİL</div>
+            <div style="text-align:center; font-size:0.9rem; color:#93c5fd;">-ma, -ış, -mak</div>
+            <div class="dropped-items" id="dropped-isim"></div>
+          </div>
+
+          <div class="drop-box sifat" data-boxtype="sifat" ondragover="allowDrop(event)" ondragleave="leaveDrop(event)" ondrop="handleDrop(event, 'sifat')" onclick="handleBoxTap('sifat')">
+            <div class="drop-box-header">🟩 SIFAT-FİİL</div>
+            <div style="text-align:center; font-size:0.9rem; color:#6ee7b7;">-an, -ası, -mez, -ar, -dik, -ecek, -miş</div>
+            <div class="dropped-items" id="dropped-sifat"></div>
+          </div>
+
+          <div class="drop-box zarf" data-boxtype="zarf" ondragover="allowDrop(event)" ondragleave="leaveDrop(event)" ondrop="handleDrop(event, 'zarf')" onclick="handleBoxTap('zarf')">
+            <div class="drop-box-header">🟨 ZARF-FİİL</div>
+            <div style="text-align:center; font-size:0.9rem; color:#fcd34d;">-ken, -alı, -madan, -ince, -ip, -arak...</div>
+            <div class="dropped-items" id="dropped-zarf"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         BÖLÜM 5: 5 SANİYEDE BUL! (5 DK)
+         ========================================== -->
+    <section id="sec-mod5" class="module-section">
+      <div class="section-header">
+        <div class="section-title-group">
+          <h2>⏱️ 5. Bölüm: “5 Saniyede Bul!”</h2>
+          <p>Süre bitmeden cümlede <strong>kaç tane fiilimsi olduğunu</strong> bul! Ardından tür analizini incele.</p>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <span class="badge-time" id="speed-index-badge">Cümle 1 / 7</span>
+          <button class="btn-secondary" onclick="startSpeedTimer(5)">⏱️ 5 Sn Başlat</button>
+          <button class="btn-secondary" onclick="startSpeedTimer(8)">⏱️ 8 Sn Başlat</button>
+          <button class="btn-primary" onclick="nextSpeedQuestion()">Sonraki Cümle ▶</button>
+        </div>
+      </div>
+
+      <div class="board-card">
+        <div class="timer-display" id="speed-timer-text">5.0 sn</div>
+        <div class="timer-bar-wrapper">
+          <div class="timer-bar-fill" id="speed-timer-bar"></div>
+        </div>
+
+        <div class="sentence-stage" style="margin-top:10px;">
+          <div class="sentence-large" id="speed-sentence-display" style="font-size:2.3rem;">
+            Ders çalışırken müzik dinlemeyi seviyorum.
+          </div>
+        </div>
+
+        <h3 style="text-align:center; font-size:1.5rem; color:#cbd5e1;">Bu cümlede kaç fiilimsi var?</h3>
+        <div class="count-options" id="speed-count-buttons">
+          <button class="count-btn" onclick="checkSpeedCount(1, this)">1</button>
+          <button class="count-btn" onclick="checkSpeedCount(2, this)">2</button>
+          <button class="count-btn" onclick="checkSpeedCount(3, this)">3</button>
+          <button class="count-btn" onclick="checkSpeedCount(4, this)">4</button>
+        </div>
+
+        <div id="speed-analysis-box" style="display:none; background:rgba(15,23,42,0.85); border:2px solid #22c55e; padding:22px; border-radius:18px; margin-top:14px;">
+          <!-- Çözüm detayları JS ile gelir -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         BÖLÜM 6: FİİL Mİ, FİİLİMSİ Mİ? (+ KALICI İSİM) (5 DK)
+         ========================================== -->
+    <section id="sec-mod6" class="module-section">
+      <div class="section-header">
+        <div class="section-title-group">
+          <h2>⚔️ 6. Bölüm: “Fiil mi, Fiilimsi mi?” (+ Kalıcı İsim Tuzakları)</h2>
+          <p>Fiilimsi fiilden türemiştir fakat <strong>çekimli fiil (yüklemdeki zaman/şahıs eki alan fiil)</strong> değildir! Bakalım ayırt edebilecek misin?</p>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <span class="badge-time" id="duel-index-badge">Karşılaştırma 1 / 6</span>
+          <button class="btn-secondary" onclick="prevDuel()">◀ Önceki</button>
+          <button class="btn-primary" onclick="nextDuel()">Sonraki Karşılaştırma ▶</button>
+        </div>
+      </div>
+
+      <div class="board-card">
+        <div style="background: rgba(245, 158, 11, 0.15); border: 2px solid #f59e0b; padding: 14px 20px; border-radius: 14px; text-align:center; font-size: 1.2rem; font-weight:700; margin-bottom:20px;" id="duel-focus-banner">
+          💡 İpucu: Kip (zaman/dilek) ve şahıs eki alıp yargı bildiren kelimeler ÇEKİMLİ FİİLDİR. Yan cümle kuranlar FİİLİMSİDİR.
+        </div>
+
+        <div class="duel-grid" id="duel-cards-container">
+          <!-- Karşılaştırmalı 2 Cümle Kartı JS ile oluşturulur -->
+        </div>
+
+        <div class="feedback-banner" id="duel-feedback" style="margin-top:20px;"></div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         BÖLÜM 7: FİNAL – FİİLİMSİ MİLYONERİ (5 DK)
+         ========================================== -->
+    <section id="sec-mod7" class="module-section">
+      <div class="section-header">
+        <div class="section-title-group">
+          <h2>🏆 7. Bölüm: Final – “Fiilimsi Milyoneri”</h2>
+          <p>100 puandan 1000 puana tırman! Joker haklarını akıllıca kullan.</p>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <button class="btn-secondary" id="joker-50" onclick="useJoker50()">✂️ 50:50 Yarı Yarıya</button>
+          <button class="btn-secondary" id="joker-class" onclick="useJokerClass()">🙋 Sınıfa Sor</button>
+          <button class="btn-secondary" id="joker-hint" onclick="useJokerHint()">💡 Dedektif İpucu</button>
+          <button class="btn-primary" onclick="restartMillionaire()">🔄 Yeni Yarışma</button>
+        </div>
+      </div>
+
+      <div class="millionaire-layout">
+        <div class="board-card" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-weight:800; color:#fbbf24; font-size:1.2rem;">
+              <span id="mil-q-level">1. SORU • 100 PUAN</span>
+              <span id="mil-total-earned">Kazanılan: 0 Puan</span>
+            </div>
+
+            <div class="millionaire-question-box" id="mil-question-text">
+              “Gülmek” hangi fiilimsi?
+            </div>
+
+            <div class="millionaire-options" id="mil-options-grid">
+              <!-- Şıklar JS ile gelir -->
+            </div>
+          </div>
+
+          <div class="feedback-banner" id="mil-feedback" style="margin-top:20px;"></div>
+
+          <div style="display:flex; justify-content:flex-end; margin-top:16px;">
+            <button class="btn-primary" id="mil-next-btn" style="display:none;" onclick="nextMillionaireQuestion()">Sonraki Basamağa Tırman ▶</button>
+          </div>
+        </div>
+
+        <!-- PUAN MERDİVENİ -->
+        <div class="prize-ladder" id="mil-ladder">
+          <!-- JS ile doldurulur -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         BÖLÜM 8 & 9: FİİLİMSİ 5 & DİJİTAL KARTLAR
+         ========================================== -->
+    <section id="sec-mod8" class="module-section">
+      <div class="section-header">
+        <div class="section-title-group">
+          <h2>🧠 Sürekli Tekrar: “Fiilimsi 5” & Dijital Fiilimsi Kartları</h2>
+          <p>Her Türkçe dersinin ilk 5 dakikası için etkileşimli <strong>Fiilimsi 5 Görev Panosu</strong> ve <strong>3B Dönen Tekrar Kartları</strong>.</p>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn-primary" onclick="showSubTab('fiilimsi5')">🧠 Fiilimsi 5 Panosu</button>
+          <button class="btn-secondary" onclick="showSubTab('flashcards')">🃏 3B Dijital Kartlar</button>
+        </div>
+      </div>
+
+      <!-- ALT SEKME 1: FİİLİMSİ 5 -->
+      <div id="subtab-fiilimsi5" class="board-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:18px;">
+          <h3 style="font-size:1.6rem; color:#fde047;">🧠 FİİLİMSİ 5 – Günün Cümlesi Analizi</h3>
+          <button class="btn-primary" onclick="nextFiilimsi5Sentence()">🎲 Yeni Cümle Getir</button>
+        </div>
+
+        <div class="sentence-stage" style="padding:24px;">
+          <div class="sentence-large" id="f5-sentence" style="font-size:2.1rem;">
+            “Kitap okumayı seven öğrenciler sınavda başarılı oldu.”
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:16px; margin-top:16px;" id="f5-steps-grid">
+          <!-- 5 Adım Kartı JS ile oluşturulur -->
+        </div>
+      </div>
+
+      <!-- ALT SEKME 2: DİJİTAL FLASHCARDS -->
+      <div id="subtab-flashcards" class="board-card" style="display:none; flex-direction:column; align-items:center;">
+        <div style="font-size:1.15rem; color:#94a3b8; font-weight:700; margin-bottom:6px;">
+          Kart <span id="fc-index">1 / 8</span> • Cevabı görmek için <strong>karta dokunun!</strong>
+        </div>
+
+        <div class="flashcard-scene" id="flashcard-scene" onclick="flipFlashcard()">
+          <div class="flashcard-inner">
+            <div class="flashcard-face flashcard-front">
+              <span class="badge-time">ÖN YÜZ • SORU KARTI</span>
+              <div style="font-size:2rem; font-weight:800;" id="fc-front-sentence">“Kitap okumayı seviyorum.”</div>
+              <div style="font-size:1.35rem; color:#fde047; font-weight:700;" id="fc-front-question">Fiilimsi hangisi ve türü nedir?</div>
+              <span style="font-size:0.95rem; color:#94a3b8; margin-top:10px;">🔄 Çevirmek için dokun</span>
+            </div>
+            <div class="flashcard-face flashcard-back">
+              <span class="badge-time" style="background:rgba(16,185,129,0.25); border-color:#10b981; color:#a7f3d0;">ARKA YÜZ • DOĞRU CEVAP</span>
+              <div style="font-size:2.3rem; font-weight:900; color:#fde047;" id="fc-back-answer">okumayı → İSİM-FİİL</div>
+              <div style="font-size:1.2rem; color:#e2e8f0; max-width:560px;" id="fc-back-detail">Kök: oku- | Ek: -ma (İsim-fiil eki). Cümlede nesne görevinde kullanılmıştır.</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:16px; margin-top:16px;">
+          <button class="btn-secondary" onclick="prevFlashcard()">◀ Önceki Kart</button>
+          <button class="btn-primary" onclick="flipFlashcard()">🔄 Kartı Çevir</button>
+          <button class="btn-secondary" onclick="nextFlashcard()">Sonraki Kart ▶</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
