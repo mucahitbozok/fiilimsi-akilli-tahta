@@ -1524,6 +1524,487 @@ function hideFeedback(elId) {
   el.innerHTML = '';
 }
 
+// ======================================================
+// BÖLÜM 9: ÇIKMIŞ FİİLİMSİ SORULARI (LGS / TEOG / BURSLULUK - 25 SORU)
+// Cevap Anahtarı: 1C 2B 3C 4A 5D 6B 7B 8D 9A 10B 11D 12C 13A 14C 15C 16D 17B 18A 19B 20C 21C 22B 23A 24D 25C
+// ======================================================
+const pastExamQuestions = [
+  {
+    no: 1,
+    exam: 'LGS - 2020',
+    passage: `
+      <div style="background:rgba(245,158,11,0.12); border-left:4px solid #f59e0b; padding:10px 14px; margin-bottom:12px; font-size:1.15rem;">
+        <strong>Öncül Bilgi:</strong> Cümlede durum veya zaman bildiren fiilimsiler zarf-fiildir.<br/>
+        • Murat Nehri <u>donunca</u> gençler, üzerinde top oynuyormuş. <em>(zaman bildiren zarf-fiil)</em><br/>
+        • Gözlerini kitaptan <u>ayırmadan</u> sorduğum soruya cevap verdi. <em>(durum bildiren zarf-fiil)</em>
+      </div>
+      <strong>(I)</strong> Yaz aylarında tamamen kuruyan Kara Muğla Deresi’nin yatağını takip ederek Saburhane Meydanı’na ilerliyorum. 
+      <strong>(II)</strong> Saburhane’nin sürprizli sokaklarına doğru yol alırken yüzleri ısıtan neşeli ilkbahar güneşinin ağaçlara can verdiğini hissetmek zor olmuyor. 
+      <strong>(III)</strong> Kim bilir üst üste kaç kat kireç atılmış bembeyaz boyalı evleri keşfetmek için sokak aralarına dalıyorum. 
+      <strong>(IV)</strong> Evlerin ahşap bölümleri, Saburhaneli kadınların titizliğiyle siline siline özgün ve büyülü bir sanat eserine dönüşmüş sanki.
+    `,
+    stem: '1. Bu parçada numaralanmış cümlelerin hangisinde zarf-fiil yoktur?',
+    options: ['I', 'II', 'III', 'IV'],
+    correct: 2, // C
+    explanation: '<strong>Cevap C (III):</strong> (I). cümlede <em>“takip ederek” (-erek)</em>, (II). cümlede <em>“yol alırken” (-ken)</em>, (IV). cümlede <em>“siline siline” (-e...-e)</em> zarf-fiildir. <strong>(III). cümlede</strong> ise <em>“atılmış”</em> (sıfat-fiil) ve <em>“keşfetmek”</em> (isim-fiil) vardır, <strong>zarf-fiil yoktur</strong>.'
+  },
+  {
+    no: 2,
+    exam: 'LGS - 2019',
+    passage: `
+      “Dedesinin elini öptü.” cümlesinde <strong>“öptü”</strong> sözcüğü çekimli fiildir ve cümlenin yüklemidir. 
+      “Dedesinin öpülesi ellerini hatırladı.” cümlesinde ise <strong>“öpülesi”</strong> sözcüğü fiil anlamını korumakla birlikte kendisinden sonra gelen ismi nitelediği için <strong>sıfat-fiildir</strong>.
+    `,
+    stem: '2. Buna göre aşağıdakilerin hangisinde sıfat-fiil kullanılmıştır?',
+    options: [
+      'Meyvesiz ağaca kimse taş atmaz.',
+      'Menfaatleri için küçülmeyen insan büyüktür.',
+      'Hayat ancak yaşayarak tecrübe edilir.',
+      'Öğrenmenin sınırlarını genellikle kendiniz koyarsınız.'
+    ],
+    correct: 1, // B
+    explanation: '<strong>Cevap B:</strong> <em>“küçülmeyen (insan)”</em> sözcüğü <strong>-en</strong> sıfat-fiil ekini alarak kendisinden sonraki <em>insan</em> ismini nitelemiştir. (A’da <em>atmaz</em> geniş zamanlı çekimli fiil, C’de <em>yaşayarak</em> zarf-fiil, D’de <em>öğrenmenin</em> isim-fiildir).'
+  },
+  {
+    no: 3,
+    exam: 'LGS - 2018',
+    passage: `
+      (...) Eğitim Uzmanı Bilge Buhan Musa, geri dönüşüm üzerine <u class="suffix-highlight">çıkardığı</u> <strong>(I)</strong> dört yeni hikâye kitabıyla çocuklara çevre bilinci kazandırmayı hedefliyor. (...) verdiği yöntemlerle <u class="suffix-highlight">somutlaştırıp</u> <strong>(II)</strong> çocukların bunu davranışa kolayca dönüştürebileceklerini belirtiyor. (...) gezegenimize karşı sorumluluklarını yerine <u class="suffix-highlight">getirmelerine</u> <strong>(III)</strong> aracı oluyor. (...) eşyalardan geri dönüşüme <u class="suffix-highlight">gitmeden</u> <strong>(IV)</strong> ne şekilde faydalanabileceğimiz dile getiriliyor.
+    `,
+    stem: '3. Bu metindeki numaralanmış kelimelerden hangileri zarf-fiildir?',
+    options: ['I ve II.', 'I ve III.', 'II ve IV.', 'III ve IV.'],
+    correct: 2, // C
+    explanation: '<strong>Cevap C (II ve IV):</strong> (I) <em>çıkardığı</em> → Sıfat-fiil (-dık), <strong>(II) somutlaştırıp → Zarf-fiil (-ıp)</strong>, (III) <em>getirmelerine</em> → İsim-fiil (-me), <strong>(IV) gitmeden → Zarf-fiil (-meden)</strong>.'
+  },
+  {
+    no: 4,
+    exam: '2016 Kasım TEOG',
+    passage: `
+      <strong>(I)</strong> Yatağımdan doğruldum ve çatlamış dudaklarımı dilimle ıslattım. 
+      <strong>(II)</strong> Masadan, içi yarısına kadar dolu bardağı alıp üç dört yudum su içtim. 
+      <strong>(III)</strong> Pencereden sızan gün ışığı içimi mutlulukla doldurdu. 
+      <strong>(IV)</strong> Dudaklarımdaki gülümseme tüm yüzüme yayıldı.
+    `,
+    stem: '4. Bu metinde numaralanmış cümlelerin hangilerinde aynı tür fiilimsi kullanılmıştır?',
+    options: ['I ve III.', 'I ve IV.', 'II ve III.', 'II ve IV.'],
+    correct: 0, // A
+    explanation: '<strong>Cevap A (I ve III):</strong> (I). cümlede <em>“çatlamış (dudaklarımı)”</em> → <strong>Sıfat-fiil (-mış)</strong> ve (III). cümlede <em>“sızan (gün ışığı)”</em> → <strong>Sıfat-fiil (-an)</strong> kullanılmıştır. (II’de <em>alıp</em> zarf-fiil, IV’te <em>gülümseme</em> isim-fiildir).'
+  },
+  {
+    no: 5,
+    exam: '2016 Aralık TEOG - Mazeret',
+    passage: `
+      Ne zaman <u class="suffix-highlight">gelsem</u> <strong>(I)</strong> kapıların <u class="suffix-highlight">açık</u> <strong>(II)</strong><br/>
+      Bereketi sofranda / Ruhu doyuran o bereketli iksir / Bütün dertlere <u class="suffix-highlight">derman</u> <strong>(III)</strong><br/>
+      Bir fısıltı gibi / İçimize <u class="suffix-highlight">üflenen</u> <strong>(IV)</strong> mana
+    `,
+    stem: '5. Bu dizelerde numaralanmış kelimelerden hangisi fiilimsidir?',
+    options: ['I.', 'II.', 'III.', 'IV.'],
+    correct: 3, // D
+    explanation: '<strong>Cevap D (IV):</strong> <em>“üflenen (mana)”</em> sözcüğü <strong>-en</strong> sıfat-fiil ekini almış bir fiilimsidir. (<em>gelsem</em> şart kipiyle çekimli fiil, <em>açık</em> ve <em>derman</em> isimdir).'
+  },
+  {
+    no: 6,
+    exam: '2015 Kasım TEOG',
+    passage: `
+      <strong>(I)</strong> Bambular daha çok tropikal bölgelerde yaşayan çiçekli bitkilerdir. 
+      <strong>(II)</strong> Bambuların bazı türleri çok hızlı büyür. 
+      <strong>(III)</strong> Öyle ki günde bir metre kadar uzayanları vardır. 
+      <strong>(IV)</strong> Bu bitkiler genellikle yıllarca büyüyüp geliştikten sonra çiçek açar.
+    `,
+    stem: '6. Bu metinde numaralanmış cümlelerin hangisinde fiilimsi kullanılmamıştır?',
+    options: ['I.', 'II.', 'III.', 'IV.'],
+    correct: 1, // B
+    explanation: '<strong>Cevap B (II):</strong> (I)’de <em>yaşayan</em> (sıfat-fiil), (III)’te <em>uzayanları</em> (adlaşmış sıfat-fiil), (IV)’te <em>büyüyüp</em> (zarf-fiil) ve <em>geliştikten</em> (sıfat-fiil) vardır. <strong>(II). cümlede</strong> yalnızca çekimli fiil (<em>büyür</em>) vardır, fiilimsi yoktur.'
+  },
+  {
+    no: 7,
+    exam: '2015 Kasım TEOG',
+    passage: `
+      “Sesin nerde kaldı, her günkü sesin<br/>
+      <strong>Unutulmuş</strong> güzel şarkılar için”
+    `,
+    stem: '7. Bu dizelerdeki fiilimsinin türce özdeşi aşağıdakilerin hangisinde vardır?',
+    options: [
+      'Bir yer var, biliyorum / Her şeyi söylemek mümkün',
+      'Yıllardır görmediğimiz kentin / Yürümüştük anısıyla eski cumbalı evlerin',
+      'Niçin oyun biterken en sonra hatırlanır / Hatıralarımızın en tatlı oyunları',
+      'Kaç gündür gözlerimi bile kırpmadan / Yağmur altında bir şehre bakıyorum'
+    ],
+    correct: 1, // B
+    explanation: '<strong>Cevap B:</strong> Dizelerdeki <em>“Unutulmuş (güzel şarkılar)”</em> sözcüğü <strong>sıfat-fiildir (-muş)</strong>. B seçeneğindeki <em>“görmediğimiz (kentin)”</em> sözcüğü de <strong>-dik</strong> eki almış bir <strong>sıfat-fiildir</strong>. (A’da <em>söylemek</em> isim-fiil, C’de <em>biterken</em> ve D’de <em>kırpmadan</em> zarf-fiildir).'
+  },
+  {
+    no: 8,
+    exam: '2015 Aralık TEOG - Mazeret',
+    passage: `
+      “Serinlik etrafı <strong>kaplar kaplamaz</strong> parklar ve bahçeler çocuklarla doldu.”
+    `,
+    stem: '8. Aşağıdaki altı çizili kelimelerden hangisi bu cümledeki fiilimsiyle aynı türdedir?',
+    options: [
+      'Başka yoldan vapur iskelesine <u>gitmek</u> için yolu çok uzun buldum.',
+      'Nevin kendi kendini <u>sorgulamaya</u> başlar bu olaydan sonra.',
+      'Öykünün sonunda <u>gelişen</u> olayları yeniden işledim.',
+      'Köyünde cumartesi ile pazarı tarlada <u>çalışarak</u> geçiriyordu.'
+    ],
+    correct: 3, // D
+    explanation: '<strong>Cevap D:</strong> Öncüldeki <em>“kaplar kaplamaz” (-r ... -maz)</em> zaman bildiren bir <strong>zarf-fiildir</strong>. D seçeneğindeki <em>“<u>çalışarak</u>” (-arak)</em> sözcüğü de <strong>zarf-fiildir</strong>.'
+  },
+  {
+    no: 9,
+    exam: '2015 Aralık TEOG - Mazeret',
+    passage: `
+      Elimi çok dallı bir ağaç gibi<br/>
+      <u class="suffix-highlight">Tutarım</u> <strong>(I)</strong> gökyüzüne<br/>
+      Bir deve gürültüler içinde <u class="suffix-highlight">koşarken</u> <strong>(II)</strong><br/>
+      Güneş <u class="suffix-highlight">doğmadan</u> <strong>(III)</strong> evvel <u class="suffix-highlight">varmak</u> <strong>(IV)</strong> için Ufka...
+    `,
+    stem: '9. Bu dizelerde numaralanmış kelimelerden hangisi fiilimsi değildir?',
+    options: ['I.', 'II.', 'III.', 'IV.'],
+    correct: 0, // A
+    explanation: '<strong>Cevap A (I):</strong> <em>“Tutarım”</em> sözcüğü geniş zaman kipi (-ar) ve 1. tekil şahıs eki (-ım) almış <strong>çekimli bir fiildir</strong>. (II <em>koşarken</em> ve III <em>doğmadan</em> zarf-fiil, IV <em>varmak</em> isim-fiildir).'
+  },
+  {
+    no: 10,
+    exam: '2014 Kasım TEOG',
+    passage: `
+      Kitapta, beş <u class="suffix-highlight">duyumuzla</u> <strong>(1)</strong> tanıyıp hoşlandığımız şeylerden, verimli <u class="suffix-highlight">çalışmanın</u> <strong>(2)</strong> doyulmaz sevincinden ve birbirimize duyduğumuz <u class="suffix-highlight">sevgiden</u> <strong>(3)</strong> söz eden şiirler <u class="suffix-highlight">bulunuyor</u> <strong>(4)</strong>.
+    `,
+    stem: '10. Bu cümlede numaralandırılmış kelimelerden hangisi fiilimsidir?',
+    options: ['1', '2', '3', '4'],
+    correct: 1, // B
+    explanation: '<strong>Cevap B (2):</strong> 2 numaralı <em>“çalışmanın” (çalış-ma-nın)</em> sözcüğü <strong>-ma isim-fiil</strong> eki almış bir fiilimsidir. (1 ve 3 kalıcı/türemiş isim, 4 <em>bulunuyor</em> ise çekimli fiildir).'
+  },
+  {
+    no: 11,
+    exam: '2014 Kasım TEOG',
+    passage: `
+      “Bütün gece yağan karın <u class="suffix-highlight">kapadığı</u> yollar nihayet açıldı.”
+    `,
+    stem: '11. Bu cümledeki altı çizili kelimeyle aynı türde olan fiilimsi, aşağıdakilerin hangisinde yer almaktadır?',
+    options: [
+      'Habersiz gelişi hepimizi sevince boğdu.',
+      'Eve gidince bu konuyu konuşuruz.',
+      'Sorulara düşünerek cevap veriyordu.',
+      'Yolda okunacak bir kitap istiyorum.'
+    ],
+    correct: 3, // D
+    explanation: '<strong>Cevap D:</strong> Altı çizili <em>“kapadığı (yollar)”</em> <strong>-dık</strong> eki almış bir <strong>sıfat-fiildir</strong>. D seçeneğindeki <em>“okunacak (bir kitap)”</em> sözcüğü de <strong>-acak</strong> eki almış bir <strong>sıfat-fiildir</strong>.'
+  },
+  {
+    no: 12,
+    exam: '2014 Aralık - Mazeret TEOG',
+    passage: `İsim-fiiller fiil kök veya gövdelerine <strong>-ma, -ış, -mak</strong> ekleri getirilerek yapılır.`,
+    stem: '12. Aşağıdakilerin hangisinde isim-fiil kullanılmamıştır?',
+    options: [
+      'Asil duruşu daima gözümün önündedir.',
+      'Adadan dönmemize bir saat kalmıştı.',
+      'Bu, birçok kişinin emek verdiği bir kitaptır.',
+      'İlkbaharı düşünmek her zaman içimi ısıtıyor.'
+    ],
+    correct: 2, // C
+    explanation: '<strong>Cevap C:</strong> A’da <em>duruşu (-uş)</em>, B’de <em>dönmemize (-me)</em>, D’de <em>düşünmek (-mek)</em> isim-fiildir. C seçeneğinde ise yalnızca <em>“verdiği”</em> (<strong>sıfat-fiil</strong>) vardır, isim-fiil yoktur.'
+  },
+  {
+    no: 13,
+    exam: '2014 Aralık TEOG - Mazeret',
+    passage: `
+      Pencereleri geniş, doyasıya güneş <u class="suffix-highlight">alan</u> <strong>(1)</strong> bir salondaydık. Güneşin tadını <u class="suffix-highlight">çıkarıyorduk</u> <strong>(2)</strong> bu soğuk kış gününde. <u class="suffix-highlight">Günlüğümü</u> <strong>(3)</strong> yazmaya burada başladım.
+    `,
+    stem: '13. Bu metindeki altı çizili sözcüklerle ilgili aşağıdakilerin hangisinde verilenler doğrudur?',
+    options: [
+      '1: fiilimsi  |  2: fiil  |  3: isim',
+      '1: fiil  |  2: fiilimsi  |  3: isim',
+      '1: fiilimsi  |  2: fiilimsi  |  3: fiilimsi',
+      '1: fiil  |  2: isim  |  3: fiilimsi'
+    ],
+    correct: 0, // A
+    explanation: '<strong>Cevap A:</strong> (1) <em>alan</em> → sıfat-fiil (<strong>fiilimsi</strong>), (2) <em>çıkarıyorduk</em> → şimdiki zamanın hikayesiyle çekimli <strong>fiil</strong>, (3) <em>Günlüğümü</em> → <strong>isim</strong>.'
+  },
+  {
+    no: 14,
+    exam: '2013 Kasım TEOG',
+    passage: `
+      <strong>Kural:</strong> Zarf-fiil görevinde kullanılan bir sözcük cümleye <strong>zaman anlamı</strong> da kazandırabilir.
+    `,
+    stem: '14. Bu kurala uygun bir kullanım aşağıdaki cümlelerin hangisinde vardır?',
+    options: [
+      'Koşa koşa evin yolunu tuttu.',
+      'Ağaçların arasından geçip gitti.',
+      'Arkadaşını görünce hızla yanına koştu.',
+      'Usulca eğilerek karıncayı sudan çıkardı.'
+    ],
+    correct: 2, // C
+    explanation: '<strong>Cevap C:</strong> <em>“Ne zaman hızla yanına koştu? Arkadaşını <strong>görünce</strong>.”</em> (-ünce zarf-fiili cümleye <strong>zaman</strong> anlamı katmıştır; A, B ve D durum anlamı taşır).'
+  },
+  {
+    no: 15,
+    exam: '2013 Kasım TEOG',
+    passage: `
+      <strong>1.</strong> İleri görüşlü olmak önemli bir farktır.<br/>
+      <strong>2.</strong> Yaşlandıkça huyu değişti.<br/>
+      <strong>3.</strong> O, kendine yakışan kıyafeti bilir.<br/>
+      <strong>4.</strong> Topu tutup yukarı fırlattı.
+    `,
+    stem: '15. Numaralandırılmış cümlelerin hangisinde sıfat-fiil vardır?',
+    options: ['1', '2', '3', '4'],
+    correct: 2, // C
+    explanation: '<strong>Cevap C (3):</strong> 3. cümledeki <em>“yakışan (kıyafeti)”</em> sözcüğü <strong>-an</strong> eki almış bir <strong>sıfat-fiildir</strong>. (1’de <em>olmak</em> isim-fiil, 2’de <em>yaşlandıkça</em> ve 4’te <em>tutup</em> zarf-fiildir).'
+  },
+  {
+    no: 16,
+    exam: '2013 Kasım TEOG',
+    passage: `
+      “Evreni <strong>gösterecek tek pencere</strong> kitaptır.”<br/>
+      Bu cümlede sıfat-fiil, bir <strong>sıfat tamlaması</strong> oluşturmuştur.
+    `,
+    stem: '16. Aynı kullanım aşağıdakilerin hangisinde vardır?',
+    options: [
+      'Yağmurun gelişi bulutlardan belli olur.',
+      'Kitaplar yaşadıkça geçmiş unutulmayacaktır.',
+      'Konuşmasını öğreninceye kadar susmak güç değildir.',
+      'Hiç umulmadık iyilikler vardır, yıldırım gibi.'
+    ],
+    correct: 3, // D
+    explanation: '<strong>Cevap D:</strong> <em>“umulmadık iyilikler”</em> (-dık sıfat-fiil eki + <em>iyilikler</em> ismi) bir sıfat tamlaması oluşturmuştur. (B’deki <em>unutulmayacaktır</em> çekimli fiildir!).'
+  },
+  {
+    no: 17,
+    exam: '2013 Aralık - Mazeret TEOG',
+    passage: `
+      Denizdeki adalara harıl harıl <u class="suffix-highlight">yağan</u> <strong>(1)</strong> gün <u class="suffix-highlight">aydınlığı</u> <strong>(2)</strong>, insanların üzerine <u class="suffix-highlight">parlamakla</u> <strong>(3)</strong> seviniyordu. Orada bir hülya, bir rüya vardı. İnsanın her zaman <u class="suffix-highlight">özlediği</u> <strong>(4)</strong> bir hülya.
+    `,
+    stem: '17. Bu metindeki altı çizili sözcüklerden hangisi fiilimsi değildir?',
+    options: ['1', '2', '3', '4'],
+    correct: 1, // B
+    explanation: '<strong>Cevap B (2):</strong> 2 numaralı <em>“aydınlığı”</em> sözcüğü isimdir, fiilimsi değildir. (1 <em>yağan</em> ve 4 <em>özlediği</em> sıfat-fiil, 3 <em>parlamakla</em> isim-fiildir).'
+  },
+  {
+    no: 18,
+    exam: '2013 Aralık - Mazeret TEOG',
+    passage: `Zarf-fiiller fiilleri zaman veya durum bakımından tamamlayan fiilimsilerdir.`,
+    stem: '18. Aşağıdaki cümlelerin hangisinde zarf-fiil kullanılmıştır?',
+    options: [
+      'Yazar, toplantımıza katılınca çok sevindik.',
+      'Çalışan, üreten insanın yanında yer aldı.',
+      'Halkın arasında yaşamış bir yazardır.',
+      'Öykülerinde insana gösterdiği yakınlık eskimedi.'
+    ],
+    correct: 0, // A
+    explanation: '<strong>Cevap A:</strong> <em>“katılınca” (-ınca)</em> zaman bildiren bir <strong>zarf-fiildir</strong>. (B, C ve D seçeneklerindeki fiilimsiler sıfat-fiildir).'
+  },
+  {
+    no: 19,
+    exam: '2013 Aralık - Mazeret TEOG',
+    passage: `“-acak / -ecek” eki cümlenin yükleminde zaman bildirdiğinde çekimli fiil, ismi nitelediğinde sıfat-fiil olur.`,
+    stem: '19. Aşağıdaki cümlelerin hangisinde “-acak/-ecek” eki alan sözcük, çekimli fiil görevinde kullanılmıştır?',
+    options: [
+      'Çok zormuş buralarda oturulacak ev bulmak.',
+      'Haftaya bizi ziyarete gelecek o çok sevdiğimiz şair.',
+      'Şaşkınlıktan söyleyecek söz bulamadık.',
+      'Gelecek yıl hep birlikte tatile gideriz.'
+    ],
+    correct: 1, // B
+    explanation: '<strong>Cevap B (Devrik Cümle Tuzağı!):</strong> B seçeneğini kurallı dizdiğimizde: <em>“O çok sevdiğimiz şair haftaya bizi ziyarete <strong>gelecek</strong>.”</em> Cümlenin yüklemidir ve gelecek zaman kipi almış <strong>çekimli fiildir</strong>! (A’da <em>oturulacak ev</em>, C’de <em>söyleyecek söz</em>, D’de <em>gelecek yıl</em> sıfat-fiildir).'
+  },
+  {
+    no: 20,
+    exam: '2013 Aralık - Mazeret TEOG',
+    passage: `İsim-fiiller isimler gibi isim tamlamalarında tamlayan veya tamlanan olabilir.`,
+    stem: '20. Aşağıdaki cümlelerin hangisinde isim-fiil, bir isim tamlaması oluşturmuştur?',
+    options: [
+      'Dikkat çekmek için çaba harcadı.',
+      'Üçümüz de güle oynaya koşuyorduk.',
+      'Şiiri okuyuş tarzı hepimizi duygulandırdı.',
+      'Sabah saatlerinde gelen mektubu defalarca okuduk.'
+    ],
+    correct: 2, // C
+    explanation: '<strong>Cevap C:</strong> <em>“okuyuş tarzı”</em> (Ne tarzı? Okuyuş tarzı → Belirtisiz isim tamlaması) ifadesinde <strong>okuyuş (-uş)</strong> isim-fiili isim tamlamasının tamlayanı olmuştur.'
+  },
+  {
+    no: 21,
+    exam: '2014 Nisan TEOG',
+    passage: `
+      Adını daha <u class="suffix-highlight">çocukluğumda</u> <strong>(1)</strong> duyduğum, yazıları o <u class="suffix-highlight">yıllardan</u> <strong>(2)</strong> bu yana bende büyük etkiler <u class="suffix-highlight">bırakmış</u> <strong>(3)</strong> bu adamı, şimdi yakından <u class="suffix-highlight">görüyorum</u> <strong>(4)</strong>.
+    `,
+    stem: '21. Bu cümledeki numaralandırılmış sözcüklerden hangisi fiilimsidir?',
+    options: ['1', '2', '3', '4'],
+    correct: 2, // C
+    explanation: '<strong>Cevap C (3):</strong> 3 numaralı <em>“bırakmış (bu adamı)”</em> sözcüğü <strong>-mış sıfat-fiil</strong> eki alarak kendisinden sonraki <em>adam</em> ismini nitelemiştir.'
+  },
+  {
+    no: 22,
+    exam: '2019 Bursluluk Sınavı',
+    passage: `
+      Sonbahar <u class="suffix-highlight">geliyor</u> <strong>(1)</strong> serçe<br/>
+      Yuvanı nerede yapacaksın? Ayva çiçek<br/>
+      <u class="suffix-highlight">açmadan</u> <strong>(2)</strong> önce meyvelerin içi geçecek<br/>
+      Rüzgâr başka çeşit <u class="suffix-highlight">esecek</u> <strong>(3)</strong>.<br/>
+      Yağmurda <u class="suffix-highlight">ıslanacaksın</u> <strong>(4)</strong>.
+    `,
+    stem: '22. Bu metindeki numaralandırılmış sözcüklerden hangisi fiilimsidir?',
+    options: ['1', '2', '3', '4'],
+    correct: 1, // B
+    explanation: '<strong>Cevap B (2):</strong> 2 numaralı <em>“açmadan”</em> sözcüğü <strong>-madan</strong> eki almış bir <strong>zarf-fiildir</strong>. (1 <em>geliyor</em>, 3 <em>esecek</em> ve 4 <em>ıslanacaksın</em> çekimli fiillerdir).'
+  },
+  {
+    no: 23,
+    exam: '2018 Bursluluk Sınavı',
+    passage: `Sıfat-fiiller (-an, -ası, -mez, -ar, -dik, -ecek, -miş) isimleri niteleyen fiilimsilerdir.`,
+    stem: '23. Aşağıdaki cümlelerin hangisinde sıfat-fiil kullanılmamıştır?',
+    options: [
+      'Çocuklar binanın merdivenlerine koşarak çıktı.',
+      'Defterin arasında, kurutulmuş çiçekler vardı.',
+      'Topallayan kedi yavaş yavaş yanımıza geldi.',
+      'Kırılacak odunları bahçeye taşıdılar.'
+    ],
+    correct: 0, // A
+    explanation: '<strong>Cevap A:</strong> B’de <em>kurutulmuş (çiçekler)</em>, C’de <em>topallayan (kedi)</em>, D’de <em>kırılacak (odunlar)</em> sıfat-fiildir. A seçeneğindeki <em>“koşarak”</em> ise <strong>zarf-fiildir</strong>, sıfat-fiil yoktur.'
+  },
+  {
+    no: 24,
+    exam: '2011 SBS',
+    passage: `
+      Serpilmeye <u>başladı</u> bir <u>rüzgâr</u> ince ince,<br/>
+      Son <u>yokuş</u> noktasından düzlüğe <u class="suffix-highlight">çevrilince</u>.<br/>
+      <span style="font-size:0.95rem; color:#94a3b8;">— Faruk Nafiz Çamlıbel</span>
+    `,
+    stem: '24. Bu dizelerdeki altı çizili sözcüklerden hangisi fiilimsidir?',
+    options: ['Başladı', 'Rüzgâr', 'Yokuş', 'Çevrilince'],
+    correct: 3, // D
+    explanation: '<strong>Cevap D (Çevrilince):</strong> <em>“çevril-ince”</em> sözcüğü <strong>-ince</strong> eki almış zaman bildiren bir <strong>zarf-fiildir</strong>. (Dizelerdeki <em>serpilmeye</em> de isim-fiildir ancak altı çizili şıklar arasında <em>Çevrilince</em> sorulmuştur).'
+  },
+  {
+    no: 25,
+    exam: '2008 SBS',
+    passage: `Fiilimsiler cümlede isim, sıfat veya zarf görevinde kullanılır.`,
+    stem: '25. Aşağıdaki cümlelerin hangisinde altı çizili kelime diğerlerinden farklı bir görevde kullanılmıştır?',
+    options: [
+      'Kasabaya bir an önce varmak için <u>durmadan</u> yürüdük.',
+      'Uçurtmanın kuyruğunu <u>takarken</u> yanlışlıkla çıtasını kırdım.',
+      '<u>Büyüdüğüm</u> şehre yıllar sonra gelmek beni duygulandırdı.',
+      'Otobüsü durakta görünce merdivenlerden <u>koşarak</u> indim.'
+    ],
+    correct: 2, // C
+    explanation: '<strong>Cevap C:</strong> A (<em>durmadan</em>), B (<em>takarken</em>) ve D (<em>koşarak</em>) seçeneklerindeki altı çizili kelimeler <strong>zarf-fiil (zarf)</strong> görevindedir. C seçeneğindeki <em>“<u>Büyüdüğüm</u> (şehre)”</em> ise <strong>-dık</strong> eki almış bir <strong>sıfat-fiildir (sıfat görevindedir)</strong>!'
+  }
+];
+
+let currentExamIdx = 0;
+let examStatusMap = {}; // { 0: 'correct' | 'wrong' }
+
+function renderExamNumberStrip() {
+  const strip = document.getElementById('exam-q-numbers');
+  if (!strip) return;
+  strip.innerHTML = '';
+
+  pastExamQuestions.forEach((q, idx) => {
+    const btn = document.createElement('button');
+    btn.textContent = q.no;
+    btn.style.width = '44px';
+    btn.style.height = '44px';
+    btn.style.borderRadius = '10px';
+    btn.style.fontWeight = '800';
+    btn.style.fontSize = '1rem';
+    btn.style.cursor = 'pointer';
+    btn.style.border = '2px solid rgba(255,255,255,0.18)';
+    btn.style.transition = '0.15s';
+
+    if (idx === currentExamIdx) {
+      btn.style.background = '#f59e0b';
+      btn.style.color = '#0f172a';
+      btn.style.borderColor = '#fde047';
+      btn.style.transform = 'scale(1.1)';
+    } else if (examStatusMap[idx] === 'correct') {
+      btn.style.background = 'rgba(34,197,94,0.28)';
+      btn.style.color = '#86efac';
+      btn.style.borderColor = '#22c55e';
+    } else if (examStatusMap[idx] === 'wrong') {
+      btn.style.background = 'rgba(239,68,68,0.28)';
+      btn.style.color = '#fca5a5';
+      btn.style.borderColor = '#ef4444';
+    } else {
+      btn.style.background = '#1e293b';
+      btn.style.color = '#cbd5e1';
+    }
+
+    btn.onclick = () => {
+      playSound('click');
+      currentExamIdx = idx;
+      renderExamQuestion();
+    };
+    strip.appendChild(btn);
+  });
+}
+
+function renderExamQuestion() {
+  const q = pastExamQuestions[currentExamIdx];
+  if (!q) return;
+
+  renderExamNumberStrip();
+  document.getElementById('exam-badge-year').textContent = `📌 ${q.exam}`;
+  document.getElementById('exam-q-title').textContent = `SORU ${q.no} / ${pastExamQuestions.length}  •  (${q.exam})`;
+  document.getElementById('exam-q-passage').innerHTML = q.passage;
+  document.getElementById('exam-q-stem').innerHTML = q.stem;
+
+  const solBox = document.getElementById('exam-q-solution');
+  solBox.style.display = 'none';
+  solBox.innerHTML = `🎯 ${q.explanation}`;
+
+  const optsContainer = document.getElementById('exam-q-options');
+  optsContainer.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D'];
+
+  q.options.forEach((optText, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'mil-opt-btn';
+    btn.id = `exam-opt-${idx}`;
+    btn.innerHTML = `<span class="letter">${letters[idx]}</span> <span>${optText}</span>`;
+    btn.onclick = () => selectExamOption(idx, btn);
+    optsContainer.appendChild(btn);
+  });
+}
+
+function selectExamOption(idx, btnEl) {
+  const q = pastExamQuestions[currentExamIdx];
+  const solBox = document.getElementById('exam-q-solution');
+  solBox.style.display = 'block';
+
+  if (idx === q.correct) {
+    playSound('fanfare');
+    btnEl.classList.add('correct');
+    examStatusMap[currentExamIdx] = 'correct';
+  } else {
+    playSound('wrong');
+    btnEl.classList.add('wrong');
+    const rightBtn = document.getElementById(`exam-opt-${q.correct}`);
+    if (rightBtn) rightBtn.classList.add('correct');
+    examStatusMap[currentExamIdx] = 'wrong';
+  }
+  renderExamNumberStrip();
+}
+
+function toggleExamSolution() {
+  playSound('click');
+  const solBox = document.getElementById('exam-q-solution');
+  const q = pastExamQuestions[currentExamIdx];
+  solBox.style.display = solBox.style.display === 'none' ? 'block' : 'none';
+  const rightBtn = document.getElementById(`exam-opt-${q.correct}`);
+  if (rightBtn) rightBtn.classList.add('correct');
+}
+
+function nextExamQuestion() {
+  playSound('click');
+  currentExamIdx = (currentExamIdx + 1) % pastExamQuestions.length;
+  renderExamQuestion();
+}
+
+function prevExamQuestion() {
+  playSound('click');
+  currentExamIdx = (currentExamIdx - 1 + pastExamQuestions.length) % pastExamQuestions.length;
+  renderExamQuestion();
+}
+
 // --- UYGULAMA BAŞLATICI ---
 window.addEventListener('DOMContentLoaded', () => {
   renderDiscoverySet();
@@ -1535,4 +2016,5 @@ window.addEventListener('DOMContentLoaded', () => {
   restartMillionaire();
   renderFiilimsi5();
   renderFlashcard();
+  renderExamQuestion();
 });

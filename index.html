@@ -34,6 +34,10 @@
         <button class="score-btn" style="width:auto; padding:0 8px; font-size:0.85rem;" onclick="clearCanvas()">🧹 Sil</button>
       </div>
 
+      <button class="tool-btn" style="background: linear-gradient(135deg, #f59e0b, #d97706); color:#0f172a; border-color:#fde047;" onclick="switchModule('mod9')">
+        📝 Çıkmış Sorular (25)
+      </button>
+
       <button class="tool-btn" onclick="toggleCheatSheet()">
         📌 Ek Kodlamaları
       </button>
@@ -59,6 +63,7 @@
     <button class="nav-pill" data-target="mod6" onclick="switchModule('mod6')">6️⃣ Fiil mi Fiilimsi mi? (5 dk)</button>
     <button class="nav-pill" data-target="mod7" onclick="switchModule('mod7')">7️⃣ Fiilimsi Milyoneri (5 dk)</button>
     <button class="nav-pill" data-target="mod8" onclick="switchModule('mod8')">🧠 Fiilimsi 5 & Kartlar</button>
+    <button class="nav-pill" data-target="mod9" style="border-color:#f59e0b; color:#fde047;" onclick="switchModule('mod9')">📝 Çıkmış Sorular (25 Soru)</button>
   </nav>
 
   <!-- EKLER VE KODLAMALAR MODAL / ÇEKMECESİ -->
@@ -211,6 +216,20 @@
           <div class="menu-card-footer">
             <span>🔄 Sürekli Tekrar Sistemi</span>
             <span>Flashcard & Günlük Rutin →</span>
+          </div>
+        </div>
+
+        <div class="menu-card" style="border-color:#f59e0b; background: linear-gradient(145deg, #2e1f0f, #172033);" onclick="switchModule('mod9')">
+          <div class="menu-card-top">
+            <div>
+              <h3 style="color:#fde047;">9. Çıkmış Sorular (25 Soru)</h3>
+              <p>LGS (2020-2018), TEOG, Bursluluk ve SBS’de çıkmış <strong>tam 25 resmi fiilimsi sorusu</strong> ve detaylı çözümleri!</p>
+            </div>
+            <div class="menu-icon" style="background:rgba(245,158,11,0.2);">📝</div>
+          </div>
+          <div class="menu-card-footer" style="color:#fbbf24;">
+            <span>🎯 LGS • TEOG • Bursluluk</span>
+            <span>25 Çıkmış Soruyu Çöz →</span>
           </div>
         </div>
       </div>
@@ -578,6 +597,54 @@
           <button class="btn-secondary" onclick="prevFlashcard()">◀ Önceki Kart</button>
           <button class="btn-primary" onclick="flipFlashcard()">🔄 Kartı Çevir</button>
           <button class="btn-secondary" onclick="nextFlashcard()">Sonraki Kart ▶</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         BÖLÜM 9: ÇIKMIŞ FİİLİMSİ SORULARI (LGS / TEOG / BURSLULUK - 25 SORU)
+         ========================================== -->
+    <section id="sec-mod9" class="module-section">
+      <div class="section-header" style="border-left-color: #f59e0b;">
+        <div class="section-title-group">
+          <h2>📝 Fiilimsiler – Çıkmış Sorular ve Çözümleri (1 – 25)</h2>
+          <p>LGS, TEOG, Bursluluk ve SBS’de sorulmuş <strong>25 resmi çıkmış soru</strong>. İstediğiniz soru numarasına tıklayarak doğrudan açabilirsiniz.</p>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+          <span class="badge-time" style="border-color:#f59e0b; color:#fde047; background:rgba(245,158,11,0.2);" id="exam-badge-year">LGS - 2020</span>
+          <button class="btn-secondary" onclick="prevExamQuestion()">◀ Önceki Soru</button>
+          <button class="btn-primary" onclick="nextExamQuestion()">Sonraki Soru ▶</button>
+        </div>
+      </div>
+
+      <div class="board-card">
+        <!-- 1'den 25'e Hızlı Soru Seçici Grid -->
+        <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid rgba(255,255,255,0.1);" id="exam-q-numbers">
+          <!-- JS ile 1..25 butonları oluşturulur -->
+        </div>
+
+        <!-- Soru Üst Bilgi ve Metin/Öncül Kutusu -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
+          <span style="font-size:1.35rem; font-weight:900; color:#fbbf24;" id="exam-q-title">SORU 1 / 25</span>
+          <button class="btn-secondary" style="padding:8px 16px; font-size:0.95rem;" onclick="toggleExamSolution()">👁️ Çözümü / Cevap Anahtarını Göster</button>
+        </div>
+
+        <div id="exam-q-passage" style="background:#0f172a; border:2px solid #334155; border-radius:18px; padding:24px 28px; font-size:1.35rem; line-height:1.65; color:#f1f5f9; margin-bottom:18px;">
+          <!-- Soru metni ve öncülü JS ile gelir -->
+        </div>
+
+        <div id="exam-q-stem" style="font-size:1.45rem; font-weight:800; color:#fde047; margin-bottom:18px; padding:0 6px;">
+          <!-- Soru kökü JS ile gelir -->
+        </div>
+
+        <!-- A, B, C, D Şıkları -->
+        <div class="millionaire-options" id="exam-q-options">
+          <!-- Şıklar JS ile gelir -->
+        </div>
+
+        <!-- Çözüm ve Cevap Anahtarı Kutusu -->
+        <div id="exam-q-solution" style="display:none; margin-top:20px; background:rgba(16,185,129,0.15); border:2px solid #10b981; border-radius:16px; padding:20px 24px; font-size:1.2rem; line-height:1.55; color:#d1fae5;">
+          <!-- Detaylı çözüm JS ile gelir -->
         </div>
       </div>
     </section>
