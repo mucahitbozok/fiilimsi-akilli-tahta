@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5. Sınıf Bilişim Teknolojileri Tekrar Oyunu</title>
+    <!-- Tailwind CSS for modern responsive styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);
+            min-height: 100vh;
+        }
+        .retro-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 4px solid #6366f1;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        .option-btn {
+            transition: all 0.2s ease;
+        }
+        .option-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+        @keyframes bounce-short {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        .animate-bounce-short {
+            animation: bounce-short 1.5s infinite;
+        }
+    </style>
+</head>
+<body class="text-slate-800 flex flex-col items-center justify-center p-4">
+
+    <!-- Ana Uygulamaya Dönüş Butonu -->
+    <div class="w-full max-w-2xl flex justify-between items-center mb-3">
+        <a href="index.html" class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs md:text-sm font-bold backdrop-blur transition-all border border-white/20">
+            <i class="fa-solid fa-arrow-left"></i> Ana Uygulamaya Dön
+        </a>
+        <span class="text-indigo-200 text-xs font-semibold">Akıllı Tahta Platformu</span>
+    </div>
+
+    <header class="w-full max-w-2xl text-center mb-6">
+        <div class="inline-block bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-2 shadow-md">
+            <i class="fa-solid fa-graduation-cap mr-1"></i> MEB 5. Sınıf Bilişim Teknolojileri
+        </div>
+        <h1 class="text-3xl md:text-4xl font-extrabold text-white tracking-wide drop-shadow-md">
+            Bilişim Kahramanı Maceraları 🚀
+        </h1>
+        <p class="text-indigo-200 text-sm md:text-base mt-1">Donanım, Yazılım, Dijital Vatandaşlık ve Güvenlik Yolculuğu!</p>
+    </header>
+
+    <main class="w-full max-w-2xl">
+        
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="retro-card rounded-3xl p-6 md:p-8 text-center">
+            <div class="w-24 h-24 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl shadow-inner animate-bounce-short">
+                <i class="fa-solid fa-robot"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-indigo-900 mb-3">Tekrar Oyununa Hoş Geldin!</h2>
+            <p class="text-gray-600 mb-6 text-sm md:text-base leading-relaxed">
+                Bilgisayar parçalarından internet güvenliğine kadar öğrendiklerini test etme zamanı. Soruları yanıtla, rozetleri topla ve bilişim kahramanı ol!
+            </p>
+            <div class="mb-6 text-left bg-indigo-50 p-4 rounded-xl border border-indigo-100 text-sm text-indigo-900">
+                <p class="font-semibold mb-2"><i class="fa-solid fa-circle-info text-indigo-600 mr-2"></i>Oyun Kuralları:</p>
+                <ul class="list-disc list-inside space-y-1 text-gray-700">
+                    <li>Toplam 10 heyecan verici soru seni bekliyor.</li>
+                    <li>Her doğru yanıt 10 puan kazandırır.</li>
+                    <li>Süre sınırı yok, dikkatli düşün ve en doğru şıkkı seç!</li>
+                </ul>
+            </div>
+            <button onclick="startGame()" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold py-4 px-8 rounded-2xl shadow-lg hover:from-indigo-500 hover:to-violet-500 transition-all duration-200 text-lg flex items-center justify-center gap-2">
+                <i class="fa-solid fa-play"></i> Oyunu Başlat
+            </button>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="retro-card rounded-3xl p-6 md:p-8 hidden">
+            <!-- Score & Progress Bar -->
+            <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                <div class="flex items-center gap-2">
+                    <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full" id="question-counter">Soru 1/10</span>
+                    <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full" id="category-badge">Donanım</span>
+                </div>
+                <div class="flex items-center gap-2 text-indigo-900 font-bold">
+                    <i class="fa-solid fa-star text-amber-500"></i>
+                    <span id="score-display">0</span> Puan
+                </div>
+            </div>
+
+            <!-- Question Box -->
+            <div class="mb-6">
+                <h3 id="question-text" class="text-lg md:text-xl font-bold text-gray-800 leading-snug">
+                    Soru metni buraya gelecektir...
+                </h3>
+            </div>
+
+            <!-- Options Container -->
+            <div id="options-container" class="space-y-3 mb-6">
+                <!-- Options injected via JS -->
+            </div>
+
+            <!-- Next Button (Hidden until answered) -->
+            <div id="next-container" class="hidden text-right">
+                <button onclick="nextQuestion()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl shadow transition-all flex items-center justify-center gap-2 ml-auto">
+                    Sonraki Soru <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="retro-card rounded-3xl p-6 md:p-8 text-center hidden">
+            <div id="result-icon" class="w-24 h-24 bg-amber-100 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl shadow-inner">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+            <h2 id="result-title" class="text-2xl font-bold text-indigo-900 mb-2">Tebrikler Bilişim Kahramanı!</h2>
+            <p id="result-message" class="text-gray-600 mb-6 text-sm md:text-base">
+                Harika bir performans sergiledin ve tüm soruları tamamladın.
+            </p>
+            <div class="bg-indigo-50 p-6 rounded-2xl mb-6 border border-indigo-100">
+                <div class="text-sm text-gray-500 uppercase tracking-wider font-semibold mb-1">Toplam Puanın</div>
+                <div id="final-score" class="text-4xl font-extrabold text-indigo-600">100</div>
+                <div id="badge-title" class="mt-2 text-sm font-bold text-violet-700 bg-violet-100 py-1 px-3 rounded-full inline-block">Unvan: Dijital Uzman</div>
+            </div>
+            <button onclick="restartGame()" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold py-4 px-8 rounded-2xl shadow-lg hover:from-indigo-500 hover:to-violet-500 transition-all duration-200 text-lg flex items-center justify-center gap-2">
+                <i class="fa-solid fa-rotate-right"></i> Tekrar Oyna
+            </button>
+        </div>
+
+    </main>
+
+    <script>
+        // Question Bank covering 5th Grade IT Curriculum
+        const questions = [
+            {
+                category: "Donanım",
+                question: "Bilgisayarın tüm işlemlerini yürüten, verileri işleyen ve 'beyni' olarak kabul edilen donanım birimi aşağıdakilerden hangisidir?",
+                options: ["Sabit Disk (HDD)", "İşlemci (CPU)", "Anakart", "RAM Bellek"],
+                correct: 1
+            },
+            {
+                category: "Donanım",
+                question: "Bilgisayardaki bilgileri kalıcı olarak saklayan ve elektrik kesildiğinde verilerin silinmediği birim hangisidir?",
+                options: ["RAM Bellek", "İşlemci", "Sabit Disk (HDD / SSD)", "Ekran Kartı"],
+                correct: 2
+            },
+            {
+                category: "Yazılım",
+                question: "Aşağıdakilerden hangisi bir işletim sistemi yazılımıdır?",
+                options: ["Microsoft Word", "Windows", "Paint", "Google Chrome"],
+                correct: 1
+            },
+            {
+                category: "İnternet ve E-Posta",
+                question: "İnternet üzerinde güvenli bir şekilde mesajlaşmak ve dosya göndermek için kullanılan elektronik posta adreslerinde mutlaka bulunması gereken işaret hangisidir?",
+                options: ["#", "@", "&", "%"],
+                correct: 1
+            },
+            {
+                category: "Dijital Vatandaşlık",
+                question: "İnternette kimliğimizi gizleyen, kişisel şifrelerimizi ve özel bilgilerimizi başkalarıyla paylaşmamamız gerektiğini belirten kavram aşağıdakilerden hangisidir?",
+                options: ["Dijital Ayak İzi", "Siber Zorbalık", "Kişisel Güvenlik ve Gizlilik", "Telif Hakkı"],
+                correct: 2
+            },
+            {
+                category: "Dosya ve Klasörler",
+                question: "Bilgisayarda oluşturduğumuz çalışmalarımızı düzenli bir şekilde saklamak için neyin içine kaydederiz?",
+                options: ["Klasör", "Hoparlör", "Yazıcı", "Monitör"],
+                correct: 0
+            },
+            {
+                category: "Bilişim Etiği",
+                question: "Başkalarının internette paylaştığı fotoğrafları veya yazıları izinsiz alıp kendi malımız gibi göstermek hangi kavrama girer?",
+                options: ["Dijital Paylaşım", "Telif Hakkı İhlali (Korsanlık)", "Faydalı Bilgi", "Eğitsel Yazılım"],
+                correct: 1
+            },
+            {
+                category: "Donanım",
+                question: "Kâğıt üzerindeki bir resmi veya belği dijital ortama (bilgisayara) aktarmak için hangi donanım birimi kullanılır?",
+                options: ["Yazıcı (Printer)", "Tarayıcı (Scanner)", "Klavye", "Hoparlör"],
+                correct: 1
+            },
+            {
+                category: "Güvenlik",
+                question: "Güçlü bir şifre oluştururken aşağıdakilerden hangisine dikkat etmemeliyiz?",
+                options: ["Büyük ve küçük harf kullanmak", "Doğum tarihi veya evcil hayvan adı gibi kolay tahmin edilen bilgiler kullanmak", "Özel karakterler ve rakamlar eklemek", "Şifreyi kimseyle paylaşmamak"],
+                correct: 1
+            },
+            {
+                category: "Algoritma",
+                question: "Günlük hayatta bir çay demleme veya kek yapma sürecinde izlenen adımların sırasına bilgisayar bilimlerinde ne denir?",
+                options: ["Donanım", "İşletim Sistemi", "Algoritma", "Tarayıcı"],
+                correct: 2
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultScreen = document.getElementById('result-screen');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const questionCounter = document.getElementById('question-counter');
+        const categoryBadge = document.getElementById('category-badge');
+        const scoreDisplay = document.getElementById('score-display');
+        const nextContainer = document.getElementById('next-container');
+
+        function startGame() {
+            welcomeScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            currentQuestionIndex = 0;
+            score = 0;
+            scoreDisplay.textContent = score;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            answered = false;
+            nextContainer.classList.add('hidden');
+            const q = questions[currentQuestionIndex];
+
+            questionCounter.textContent = `Soru ${currentQuestionIndex + 1}/${questions.length}`;
+            categoryBadge.textContent = q.category;
+            questionText.textContent = q.question;
+
+            optionsContainer.innerHTML = '';
+            q.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn w-full text-left p-4 rounded-xl border-2 border-indigo-200 bg-white hover:bg-indigo-50 font-medium text-gray-700 flex items-center justify-between';
+                btn.innerHTML = `<span><span class="font-bold text-indigo-600 mr-2">${String.fromCharCode(65 + index)})</span> ${option}</span>`;
+                btn.onclick = () => selectOption(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function selectOption(selectedIndex, buttonElement) {
+            if (answered) return;
+            answered = true;
+
+            const q = questions[currentQuestionIndex];
+            const allButtons = optionsContainer.getElementsByTagName('button');
+
+            if (selectedIndex === q.correct) {
+                buttonElement.classList.remove('bg-white', 'border-indigo-200', 'hover:bg-indigo-50');
+                buttonElement.classList.add('bg-emerald-500', 'border-emerald-600', 'text-white');
+                buttonElement.innerHTML += `<i class="fa-solid fa-circle-check text-white text-lg"></i>`;
+                score += 10;
+                scoreDisplay.textContent = score;
+            } else {
+                buttonElement.classList.remove('bg-white', 'border-indigo-200', 'hover:bg-indigo-50');
+                buttonElement.classList.add('bg-rose-500', 'border-rose-600', 'text-white');
+                buttonElement.innerHTML += `<i class="fa-solid fa-circle-xmark text-white text-lg"></i>`;
+
+                // Highlight correct one
+                const correctBtn = allButtons[q.correct];
+                correctBtn.classList.remove('bg-white', 'border-indigo-200', 'hover:bg-indigo-50');
+                correctBtn.classList.add('bg-emerald-500', 'border-emerald-600', 'text-white');
+                correctBtn.innerHTML += `<i class="fa-solid fa-circle-check text-white text-lg"></i>`;
+            }
+
+            // Disable all buttons
+            for (let btn of allButtons) {
+                btn.disabled = true;
+                btn.classList.add('opacity-90', 'cursor-not-allowed');
+            }
+
+            nextContainer.classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            quizScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+
+            document.getElementById('final-score').textContent = `${score} / 100`;
+
+            const resultTitle = document.getElementById('result-title');
+            const resultMessage = document.getElementById('result-message');
+            const badgeTitle = document.getElementById('badge-title');
+            const resultIcon = document.getElementById('result-icon');
+
+            if (score === 100) {
+                resultTitle.textContent = "Mükemmel! Bilişim Dâhisi!";
+                resultMessage.textContent = "Tebrikler, tüm soruları doğru bilerek harika bir başarı elde ettin!";
+                badgeTitle.textContent = "Unvan: 🏆 Bilişim Profesörü";
+            } else if (score >= 70) {
+                resultTitle.textContent = "Harika İş!";
+                resultMessage.textContent = "Bilişim teknolojileri konularına oldukça hakimsin. Tebrikler!";
+                badgeTitle.textContent = "Unvan: 🥈 Dijital Uzman";
+            } else if (score >= 40) {
+                resultTitle.textContent = "Fena Değil!";
+                resultMessage.textContent = "Konuları biraz daha tekrar ederek çok daha iyi olabilirsin!";
+                badgeTitle.textContent = "Unvan: 🥉 Bilgisayar Gezgini";
+            } else {
+                resultTitle.textContent = "Tekrar Etmelisin!";
+                resultMessage.textContent = "Bilişim konularını gözden geçirmek için notlarına tekrar göz atabilirsin.";
+                badgeTitle.textContent = "Unvan: 🌱 Çırak Bilişimci";
+            }
+        }
+
+        function restartGame() {
+            resultScreen.classList.add('hidden');
+            welcomeScreen.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

@@ -38,6 +38,10 @@
         📝 Çıkmış Sorular (25)
       </button>
 
+      <button class="tool-btn" style="background: linear-gradient(135deg, #4f46e5, #7c3aed); color:#fff; border-color:#a78bfa;" onclick="switchModule('mod10')">
+        🎮 5. Sınıf Bilişim Oyunu
+      </button>
+
       <button class="tool-btn" onclick="toggleCheatSheet()">
         📌 Ek Kodlamaları
       </button>
@@ -64,6 +68,7 @@
     <button class="nav-pill" data-target="mod7" onclick="switchModule('mod7')">7️⃣ Fiilimsi Milyoneri (5 dk)</button>
     <button class="nav-pill" data-target="mod8" onclick="switchModule('mod8')">🧠 Fiilimsi 5 & Kartlar</button>
     <button class="nav-pill" data-target="mod9" style="border-color:#f59e0b; color:#fde047;" onclick="switchModule('mod9')">📝 Çıkmış Sorular (25 Soru)</button>
+    <button class="nav-pill" data-target="mod10" style="border-color:#818cf8; color:#c7d2fe;" onclick="switchModule('mod10')">🎮 5. Sınıf Bilişim Oyunu</button>
   </nav>
 
   <!-- EKLER VE KODLAMALAR MODAL / ÇEKMECESİ -->
@@ -230,6 +235,20 @@
           <div class="menu-card-footer" style="color:#fbbf24;">
             <span>🎯 LGS • TEOG • Bursluluk</span>
             <span>25 Çıkmış Soruyu Çöz →</span>
+          </div>
+        </div>
+
+        <div class="menu-card" style="border-color:#818cf8; background: linear-gradient(145deg, #1e1b4b, #172033);" onclick="switchModule('mod10')">
+          <div class="menu-card-top">
+            <div>
+              <h3 style="color:#c7d2fe;">10. Bilişim Teknolojileri Oyunu</h3>
+              <p>MEB 5. Sınıf: <strong>Bilişim Kahramanı Maceraları!</strong> Donanım, Yazılım, Dijital Vatandaşlık ve Güvenlik (10 Soru).</p>
+            </div>
+            <div class="menu-icon" style="background:rgba(99,102,241,0.25);">🎮</div>
+          </div>
+          <div class="menu-card-footer" style="color:#a5b4fc;">
+            <span>🚀 5. Sınıf MEB Müfredatı</span>
+            <span>Bilişim Oyununu Başlat →</span>
           </div>
         </div>
       </div>
@@ -646,6 +665,30 @@
         <div id="exam-q-solution" style="display:none; margin-top:20px; background:rgba(16,185,129,0.15); border:2px solid #10b981; border-radius:16px; padding:20px 24px; font-size:1.2rem; line-height:1.55; color:#d1fae5;">
           <!-- Detaylı çözüm JS ile gelir -->
         </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         BÖLÜM 10: 5. SINIF BİLİŞİM TEKNOLOJİLERİ TEKRAR OYUNU
+         ========================================== -->
+    <section id="sec-mod10" class="module-section">
+      <div class="section-header" style="border-left-color: #6366f1;">
+        <div class="section-title-group">
+          <h2>🎮 5. Sınıf Bilişim Teknolojileri Tekrar Oyunu</h2>
+          <p>MEB Müfredatı • <strong>Bilişim Kahramanı Maceraları:</strong> Donanım, Yazılım, Dijital Vatandaşlık ve Güvenlik (10 Soru)</p>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+          <a href="bilisim-oyunu.html" target="_blank" class="btn-secondary" style="text-decoration:none;">
+            ⛶ Yeni Sekmede Tam Ekran Aç
+          </a>
+          <button class="btn-primary" onclick="document.getElementById('bilisim-frame').src = 'bilisim-oyunu.html'; playSound('click');">
+            🔄 Oyunu Yeniden Başlat
+          </button>
+        </div>
+      </div>
+
+      <div class="board-card" style="padding:14px;">
+        <iframe id="bilisim-frame" src="bilisim-oyunu.html" style="width: 100%; height: 820px; border: 2px solid rgba(255,255,255,0.12); border-radius: 18px; background: #1e1b4b;" allowfullscreen></iframe>
       </div>
     </section>
 
